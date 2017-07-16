@@ -4,6 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 
-void bin_to_hex (unsigned char *str);
+void bin_to_hex (unsigned char *dest, unsigned char *source, size_t len);
 
 #endif
