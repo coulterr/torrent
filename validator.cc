@@ -1,13 +1,4 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string>
-#include <iostream>
-#include <openssl/sha.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include "bin_to_hex.h"
+#include "headers/validator.h"
 
 void print_hash(unsigned char *hash) 
 {

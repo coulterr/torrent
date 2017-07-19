@@ -1,12 +1,18 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string>
-#include <iostream>
-#include <openssl/sha.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "bin_to_hex.h"
+#include "headers/generator.h"
+
+struct metafile_info {
+	const char *src_dir;
+	const char *meta_path; 
+	const int block_size; 
+}
+
+
+char *generate_file_metadata(struct metafile_info *info, const char *subpath)
+{		
+	char *source_path = strcat(info -> src_dir, subpath);
+	 
+
+}
 
 int main (int argc, char **argv)
 {
@@ -34,7 +40,4 @@ int main (int argc, char **argv)
 
 	fclose(source); 
 	fclose(dest); 
-
-	 
-	
 }
