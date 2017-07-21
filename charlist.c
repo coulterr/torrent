@@ -1,12 +1,8 @@
-typedef struct {
-	size_t size; 
-	size_t capacity;
-	char *data; 
-}Charlist; 
+#include "headers/charlist.h"
 
 int Charlist_init(Charlist *charlist)
 {
-	charlist->data = malloc(sizeof(char) 1024); 
+	charlist->data = malloc(sizeof(char) * 1024); 
 	charlist->size = 0; 
 	charlist->capacity = 1024; 
 }
