@@ -35,7 +35,6 @@ char *generate_file_metadata(const char *src_path, const char *meta_path, const 
 		SHA1(buff, len, hash); 
 		bin_to_hex(hex, hash, SHA_DIGEST_LENGTH);
 		Charlist_add(charlist, hex, hex_length); 
-		//fwrite(hex, sizeof(char), SHA_DIGEST_LENGTH * 2, dest); 
 	}
 	
 	fprintf(dest, "%i\n", sum); 
