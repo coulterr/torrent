@@ -9,37 +9,49 @@
 #include <dirent.h>
 
 #include "headers/bin_to_hex.h"
+#include "headers/charlist.h"
 
-
-char *generate_file_metadata(const char *src_path, const char *meta_path, const int block_size)
-{		
+char *generate_file_metadata(const char *src_path, const char *meta_path, const size_t block_size)
+{	
+	size_t hex_length = SHA_DIGEST_LENGTH * 2; 
 	FILE *source = fopen(src_path, "r"); 
 	FILE *dest = fopen(meta_path, "a"); 
 	unsigned char buff[block_size]; 
 	unsigned char hash[SHA_DIGEST_LENGTH]; 
-	unsigned char hex[SHA_DIGEST_LENGTH * 2]; 
+	unsigned char hex[hex_length]; 
 
 	fwrite(src_path, sizeof(char), strlen(src_path), dest); 
 	fwrite("\n", sizeof(char), 1, dest); 
 
-	int sum = 0; 
+	Charlist *charlist; 
+	Charlist_init(&charlist); 
+
+	size_t sum = 0; 
 	size_t len;
 
 	while(len = fread(buff, sizeof(char), block_size, source)) 
 	{
+		sum += len; 
 		SHA1(buff, len, hash); 
 		bin_to_hex(hex, hash, SHA_DIGEST_LENGTH);
-		fwrite(hex, sizeof(char), SHA_DIGEST_LENGTH * 2, dest); 
+		Charlist_add(charlist, hex, hex_length); 
+		//fwrite(hex, sizeof(char), SHA_DIGEST_LENGTH * 2, dest); 
+	}
+	
+	fprintf(dest, "%i\n", sum); 
+	
+	for (size_t i = 0; i < (sum + (block_size - 1)) / block_size; i++)
+	{
+		fwrite((charlist -> data) + hex_length * i, sizeof(char), hex_length, dest); 
+		fwrite("\n", sizeof(char), 1, dest); 
 	}
 
-	fwrite("\n", sizeof(char), 1, dest); 
-	
 	fclose(source); 
 	fclose(dest); 
 }
 
 
-void generate_metadata(const char *src_dir, const char *meta_path, const int block_size)
+void generate_metadata(const char *src_dir, const char *meta_path, const size_t block_size)
 {
 	DIR *dir; 
 	struct dirent *entry; 
@@ -59,7 +71,7 @@ void generate_metadata(const char *src_dir, const char *meta_path, const int blo
 
 int main (int argc, char **argv)
 {
-	const int block_size = 16000; 
+	const size_t block_size = 16000; 
 	const char *src_dir = argv[1]; 
 	const char *meta_path = argv[2]; 
 
