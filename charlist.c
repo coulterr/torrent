@@ -1,10 +1,11 @@
 #include "headers/charlist.h"
 
-int Charlist_init(Charlist *charlist)
+int Charlist_init(Charlist **charlist)
 {
-	charlist->data = malloc(sizeof(char) * 1024); 
-	charlist->size = 0; 
-	charlist->capacity = 1024; 
+	*charlist = malloc(sizeof(Charlist)); 
+	(*charlist)->data = malloc(sizeof(char) * 1024); 
+	(*charlist)->size = 0; 
+	(*charlist)->capacity = 1024; 
 }
 int Charlist_add(Charlist *charlist, char *item, size_t len)
 {
