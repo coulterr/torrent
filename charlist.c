@@ -17,10 +17,6 @@ int Charlist_add(Charlist *charlist, char *item, size_t len)
 	memcpy((void *) (charlist->data) + charlist->size, (void *) item, len);  
 	charlist->size = charlist->size + len; 
 }
-const char *Charlist_tochars(Charlist *charlist)
-{
-	return (const char *) charlist->data;
-}
 
 void Charlist_delete(Charlist *charlist)
 {
