@@ -7,6 +7,7 @@ int Charlist_init(Charlist **charlist)
 	(*charlist)->size = 0; 
 	(*charlist)->capacity = 1024; 
 }
+
 int Charlist_add(Charlist *charlist, char *item, size_t len)
 {
 	while (charlist->size + len >= charlist->capacity){
@@ -18,7 +19,7 @@ int Charlist_add(Charlist *charlist, char *item, size_t len)
 	charlist->size = charlist->size + len; 
 }
 
-void Charlist_delete(Charlist *charlist)
+void Charlist_clean(Charlist *charlist)
 {
 	free(charlist->data); 
 }
