@@ -1,5 +1,5 @@
 #include "headers/validator.h"
-
+#include "headers/charlist.h"
 
 struct file_info 
 {
@@ -35,16 +35,17 @@ int get_meta_info(const char *meta_path)
 	while(read_line(buff, metafile) > 0)
 	{
 		struct file_info *finfo = malloc(sizeof(struct file_info)); 
-		finfo->path = malloc(strlen(buff) + 1); 
+		finfo->path = malloc(strlen(buff)); 
 		strcpy(finfo->path, buff); 
 
 		read_line(buff, metafile); 
 		finfo->byte_length = atoll(buff); 
-	
+
 		for(long long i = 0; i < ((finfo->byte_length) + (block_len - 1)) / block_len; i++)
 		{
-			fread(hex, sizeof(char), hex_len + 1, metafile); 		
+			fread(hex, sizeof(char), hex_len, metafile); 		
 		}
+		fread(hex, sizeof(char), 1, metafile); //read newline character
 
 		printf("File: %s\nCount: %ld\n", finfo->path, finfo->byte_length); 
 	}

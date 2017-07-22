@@ -42,8 +42,8 @@ char *generate_file_metadata(const char *src_path, const char *meta_path, const 
 	for (size_t i = 0; i < (sum + (block_size - 1)) / block_size; i++)
 	{
 		fwrite((charlist -> data) + hex_length * i, sizeof(char), hex_length, dest); 
-		fwrite("\n", sizeof(char), 1, dest); 
 	}
+	fwrite("\n", sizeof(char), 1, dest); 
 
 	Charlist_delete(charlist); 
 	free(charlist); 
