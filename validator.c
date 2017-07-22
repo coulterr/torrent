@@ -1,48 +1,57 @@
 #include "headers/validator.h"
 
-void print_hash(unsigned char *hash) 
+
+struct file_info 
 {
-	for(int i = 0; i < SHA_DIGEST_LENGTH * 2; i++)
+	char *path; 
+	long long byte_length; 
+};
+
+
+int read_line(char *buff, FILE *file)
+{
+	size_t i = 0; 
+	char c; 
+	
+	while(fread(&c, sizeof(char), 1, file))
 	{
-		printf("%c", hash[i]); 
+		if(c == '\n') break; 
+		buff[i] = c;
+		i++; 
 	}
-	printf("\n"); 
+	
+	buff[i] = '\0';
+	return i; 
+}
+
+int get_meta_info(const char *meta_path)
+{
+	FILE *metafile = fopen(meta_path, "r"); 
+	size_t hex_len = SHA_DIGEST_LENGTH * 2; 	
+	size_t block_len = 16000; 
+	char buff[1024]; 
+	char hex[hex_len + 1];
+
+	while(read_line(buff, metafile) > 0)
+	{
+		struct file_info *finfo = malloc(sizeof(struct file_info)); 
+		finfo->path = malloc(strlen(buff) + 1); 
+		strcpy(finfo->path, buff); 
+
+		read_line(buff, metafile); 
+		finfo->byte_length = atoll(buff); 
+	
+		for(long long i = 0; i < ((finfo->byte_length) + (block_len - 1)) / block_len; i++)
+		{
+			fread(hex, sizeof(char), hex_len + 1, metafile); 		
+		}
+
+		printf("File: %s\nCount: %ld\n", finfo->path, finfo->byte_length); 
+	}
 }
 
 
 int main (int argc, char **argv)
 {
-	const int BLOCK_SIZE = 16000; 
-	char *file_path = argv[1]; 
-	char *hashes_path = argv[2]; 
-
-	FILE *file = fopen(file_path, "r"); 
-	FILE *hashes = fopen(hashes_path, "r"); 
-
-	unsigned char buff[BLOCK_SIZE]; 
-	unsigned char hash[SHA_DIGEST_LENGTH]; 
-	unsigned char hex[SHA_DIGEST_LENGTH * 2]; 
-	unsigned char check_hex[SHA_DIGEST_LENGTH * 2]; 
-
-	int len; 
-	int i = 0; 
-	while(len = fread(buff, sizeof(char), BLOCK_SIZE, file))
-	{
-		SHA1(buff, len, hash); 
-		bin_to_hex(hex, hash, SHA_DIGEST_LENGTH);
-		fread(check_hex, sizeof(char), SHA_DIGEST_LENGTH * 2, hashes); 
-		if (memcmp(hex, check_hex, SHA_DIGEST_LENGTH * 2) == 0) {
-			printf("Block %i: SUCCESS\n", i); 
-		}else {
-			printf("Block %i: FAIL\n", i); 
-			print_hash(hex); 
-			print_hash(check_hex); 
-		}
-
-		i++; 
-		
-	}
-
-	fclose(file); 
-	fclose(hashes); 
+	get_meta_info(argv[1]); 
 }

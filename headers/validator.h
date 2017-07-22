@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 #include "bin_to_hex.h"
 
 void print_hash(unsigned char *hash);
