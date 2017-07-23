@@ -61,7 +61,5 @@ int get_meta_info(const char *meta_path, Arraylist *files, Arraylist *segments)
 			Arraylist_add((void *)segments, sinfo); 
 		}
 		fread(buff, sizeof(char), 1, metafile); //read newline character
-
-		printf("File: %s\nCount: %ld\n", finfo->path, byte_count); 
 	}
 }
