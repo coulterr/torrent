@@ -1,5 +1,5 @@
-#ifndef VALIDATOR_H
-#define VALIDATOR_H
+#ifndef METAINFO_PARSER_H
+#define METAINFO_PARSER_H
 
 
 #include <sys/types.h>
@@ -16,7 +16,7 @@
 #include "fileinfo.h"
 #include "arraylist.h"
 
-void print_hash(unsigned char *hash);
-int main (int argc, char **argv);
+int read_line(char *buff, FILE *file);
+int get_meta_info(const char *meta_path, Arraylist *files, Arraylist *segments);
 
 #endif
