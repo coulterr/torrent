@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	for(size_t i = 0; i < files->size; i++)
 	{
 		Fileinfo *finfo = (Fileinfo *) Arraylist_get(files, i);
-		printf("Path: %s\n", finfo->path); 
+		printf("Path %ld: %s\n", i, finfo->path); 
 	}
 
 
