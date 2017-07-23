@@ -10,7 +10,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include "bin_to_hex.h"
+#include "segmentinfo.h"
+#include "fileinfo.h"
+#include "arraylist.h"
 
 void print_hash(unsigned char *hash);
 int main (int argc, char **argv);
