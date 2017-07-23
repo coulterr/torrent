@@ -15,8 +15,9 @@
 #include "segmentinfo.h"
 #include "fileinfo.h"
 #include "arraylist.h"
+#include "torrentinfo.h"
 
 int read_line(char *buff, FILE *file);
-int get_meta_info(const char *meta_path, Arraylist *files, Arraylist *segments);
+int get_meta_info(Torrentinfo *info); 
 
 #endif

@@ -1,7 +1,5 @@
-#include "headers/arraylist.h"
-#include "headers/fileinfo.h"
-#include "headers/segmentinfo.h"
 #include "headers/metainfo_parser.h"
+#include "headers/torrentinfo.h"
 
 int print_info(Arraylist *files, Arraylist *segments)
 {
@@ -42,17 +40,13 @@ int print_info(Arraylist *files, Arraylist *segments)
 
 int main(int argc, char **argv)
 {
-	Arraylist *files; 
-	Arraylist *segments; 
+	Torrentinfo *info; 
+	Torrentinfo_init(&info, argv[1], ""); 
 
-	Arraylist_init(&files); 
-	Arraylist_init(&segments); 
-	
-	get_meta_info(argv[1], files, segments); 
+	get_meta_info(info); 
 
-	print_info(files, segments); 
+//	print_info(info->files, info->segments); 
 
-	Arraylist_delete(files, &Fileinfo_delete); 
-	Arraylist_delete(segments, &Segmentinfo_delete); 
+	Torrentinfo_delete(info); 
 }
 

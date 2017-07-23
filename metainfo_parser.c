@@ -17,13 +17,20 @@ int read_line(char *buff, FILE *file)
 	return i; 
 }
 
-int get_meta_info(const char *meta_path, Arraylist *files, Arraylist *segments) 
+int get_meta_info(Torrentinfo *info) 
 {
+	char *meta_path = info->metapath; 
+	Arraylist *files = info->files; 
+	Arraylist *segments = info->segments; 
+	
+
 	FILE *metafile = fopen(meta_path, "r"); 
 	size_t hex_len = SHA_DIGEST_LENGTH * 2; 	
 	int block_len = 16000;
 	int segment_len = 256;  
 	char buff[1024]; 
+
+	
 
 	while(read_line(buff, metafile) > 0)
 	{
