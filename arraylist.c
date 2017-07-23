@@ -1,11 +1,4 @@
-typedef struct {
-	
-	void **data; 
-	size_t size; 
-	size_t capacity; 
-
-}Arraylist; 
-
+#include "headers/arraylist.h"
 
 int Arraylist_init(Arraylist **list)
 {
