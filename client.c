@@ -3,17 +3,8 @@
 #include "headers/segmentinfo.h"
 #include "headers/metainfo_parser.h"
 
-
-int main(int argc, char **argv)
+int print_info(Arraylist *files, Arraylist *segments)
 {
-	Arraylist *files; 
-	Arraylist *segments; 
-
-	Arraylist_init(&files); 
-	Arraylist_init(&segments); 
-	
-	get_meta_info(argv[1], files, segments); 
-
 	size_t block_size = 16000; 
 	size_t segment_size = 256; 
 	size_t hex_len = 40; 
@@ -29,6 +20,7 @@ int main(int argc, char **argv)
 	for(size_t i = 0; i < segments->size; i++)
 	{
 		Segmentinfo *sinfo = (Segmentinfo *) Arraylist_get(segments, i); 	
+		printf("SEGMENT %ld\n", i); 
 		printf("File index: %ld\n", sinfo->file_index); 
 		printf("Offset: %ld\n", sinfo->offset); 
 		printf("Byte Count: %ld\n", sinfo->byte_count); 
@@ -40,17 +32,27 @@ int main(int argc, char **argv)
 				printf("%c", (sinfo->hashes)[hex_len * j + k]); 
 			}
 			printf("\n"); 
-		}	
+		}
 
+		printf("\n"); 
 	}
+}
 
 
-	void **whatever = malloc(sizeof(void *) * 100); 
-	free(whatever); 
 
-	Arraylist_clean(files, &Fileinfo_clean); 
-	Arraylist_clean(segments, &Segmentinfo_clean); 
+int main(int argc, char **argv)
+{
+	Arraylist *files; 
+	Arraylist *segments; 
 
+	Arraylist_init(&files); 
+	Arraylist_init(&segments); 
+	
+	get_meta_info(argv[1], files, segments); 
 
+	print_info(files, segments); 
+
+	Arraylist_delete(files, &Fileinfo_delete); 
+	Arraylist_delete(segments, &Segmentinfo_delete); 
 }
 

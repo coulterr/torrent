@@ -7,7 +7,7 @@ int Fileinfo_init(Fileinfo **finfo)
 	sem_init((*finfo)->lock, 0, 1); 
 }
 
-int Fileinfo_clean(void *finfo)
+int Fileinfo_delete(void *finfo)
 {
 	sem_destroy(((Fileinfo *)finfo)->lock); 
 	free(((Fileinfo *) finfo)->lock); 

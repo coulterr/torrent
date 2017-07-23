@@ -17,6 +17,6 @@ typedef struct {
 int Arraylist_init(Arraylist **list);
 size_t Arraylist_add(Arraylist *list, void *item);
 void *Arraylist_get(Arraylist *list, size_t index);
-int Arraylist_clean(Arraylist *list, int (*funcptr)(void *));
+int Arraylist_delete(Arraylist *list, int (*funcptr)(void *));
 
 #endif

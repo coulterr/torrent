@@ -8,7 +8,7 @@ int Segmentinfo_init(Segmentinfo **sinfo)
 }
 
 
-int Segmentinfo_clean(void *sinfo)
+int Segmentinfo_delete(void *sinfo)
 {
 	free(sinfo); 
 }

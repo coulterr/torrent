@@ -10,6 +10,6 @@ typedef struct {
 }Fileinfo; 
 
 int Fileinfo_init(Fileinfo **finfo);
-int Fileinfo_clean(void *finfo);
+int Fileinfo_delete(void *finfo);
 
 #endif

@@ -29,7 +29,7 @@ void *Arraylist_get(Arraylist *list, size_t index)
 	return NULL; 	
 }
 
-int Arraylist_clean(Arraylist *list, int (*funcptr)(void *))
+int Arraylist_delete(Arraylist *list, int (*funcptr)(void *))
 {
 	for (size_t i = 0; i < list->size; i++){
 		(*funcptr) ((list->data)[i]); 
