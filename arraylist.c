@@ -15,7 +15,7 @@ int Arraylist_init(Arraylist **list)
 	(*list) -> data = malloc(sizeof(void *) * 100); 
 }
 
-int Arraylist_add(Arraylist *list, void *item)
+size_t Arraylist_add(Arraylist *list, void *item)
 {
 	if (list->size == list->capacity)
 	{
@@ -25,7 +25,7 @@ int Arraylist_add(Arraylist *list, void *item)
 
 	(list->data)[list->size] = item; 
 	list->size = list->size + 1; 
-
+	return (list->size) - 1;  
 }
 
 void *Arraylist_get(Arraylist *list, size_t index)
