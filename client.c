@@ -45,6 +45,9 @@ int main(int argc, char **argv)
 	}
 
 
+	void **whatever = malloc(sizeof(void *) * 100); 
+	free(whatever); 
+
 	Arraylist_clean(files, &Fileinfo_clean); 
 	Arraylist_clean(segments, &Segmentinfo_clean); 
 

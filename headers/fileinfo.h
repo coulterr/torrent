@@ -6,7 +6,7 @@
 
 typedef struct {
 	char path[1024]; 
-	sem_t lock; 
+	sem_t *lock; 
 }Fileinfo; 
 
 int Fileinfo_init(Fileinfo **finfo);

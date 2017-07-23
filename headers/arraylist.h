@@ -2,12 +2,14 @@
 #define ARRAYLIST_H
 
 #include <stdlib.h>
+#include <semaphore.h>
 
 typedef struct {
 	
 	void **data; 
 	size_t size; 
 	size_t capacity; 
+	sem_t *lock; 
 
 }Arraylist; 
 
