@@ -45,7 +45,7 @@ char *generate_file_metadata(const char *src_path, const char *meta_path, const 
 	}
 	fwrite("\n", sizeof(char), 1, dest); 
 
-	Charlist_delete(charlist); 
+	Charlist_clean(charlist); 
 	free(charlist); 
 
 	fclose(source); 
