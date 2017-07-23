@@ -14,7 +14,7 @@ int Torrentinfo_init(Torrentinfo **info, const char *metapath, const char *dirpa
 
 int Torrentinfo_delete(Torrentinfo *info)
 {
-	Arraylist_delete(info->files, Fileinfo_delete); 
-	Arraylist_delete(info->files, Segmentinfo_delete);
+	Arraylist_delete(info->files, &Fileinfo_delete); 
+	Arraylist_delete(info->segments, &Segmentinfo_delete);
 	free(info); 
 }
