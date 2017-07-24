@@ -1,5 +1,37 @@
 #include "headers/metainfo_parser.h"
 
+void print_info(Torrentinfo *info)
+{
+	Arraylist *files = info->files; 
+	Arraylist *segments = info->segments; 
+
+	for(size_t i = 0; i < files->size; i++)
+	{
+		Fileinfo *finfo = (Fileinfo *) Arraylist_get(files, i);
+		printf("Path %ld: %s\n", i, finfo->path); 
+	}
+
+
+	for(size_t i = 0; i < segments->size; i++)
+	{
+		Segmentinfo *sinfo = (Segmentinfo *) Arraylist_get(segments, i); 	
+		printf("SEGMENT %ld\n", i); 
+		printf("File index: %ld\n", sinfo->file_index); 
+		printf("Offset: %ld\n", sinfo->offset); 
+		printf("Byte Count: %ld\n", sinfo->byte_count); 
+
+		for(size_t j = 0; j < (sinfo->byte_count + (META_BLOCK_LENGTH - 1)) / META_BLOCK_LENGTH; j++)
+		{
+			for(size_t k = 0; k < SHA1_HEX_LENGTH; k++)
+			{
+				printf("%c", (sinfo->hashes)[SHA1_HEX_LENGTH * j + k]); 
+			}
+			printf("\n"); 
+		}
+
+		printf("\n"); 
+	}
+}
 int read_line(char *buff, FILE *file)
 {
 	size_t i = 0; 
