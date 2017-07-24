@@ -1,20 +1,17 @@
 #include "headers/torrentinfo.h"
 
 
-int Torrentinfo_init(Torrentinfo **info, const char *metapath, const char *dirpath)
+int Torrentinfo_init(Torrentinfo **info)
 {
 	*info = malloc(sizeof(Torrentinfo)); 
 	Arraylist_init(&((*info)->files)); 
 	Arraylist_init(&((*info)->segments)); 
-	strcpy((*info)->metapath, metapath); 
-	strcpy((*info)->dirpath, dirpath); 
-
 }
 
 
-int Torrentinfo_delete(Torrentinfo *info)
+int Torrentinfo_delete(void *info)
 {
-	Arraylist_delete(info->files, &Fileinfo_delete); 
-	Arraylist_delete(info->segments, &Segmentinfo_delete);
+	Arraylist_delete(((Torrentinfo *)info)->files, &Fileinfo_delete); 
+	Arraylist_delete(((Torrentinfo *)info)->segments, &Segmentinfo_delete);
 	free(info); 
 }

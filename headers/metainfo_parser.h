@@ -18,7 +18,8 @@
 #include "torrentinfo.h"
 
 void print_info(Torrentinfo *info); 
-int read_line(char *buff, FILE *file);
-int get_meta_info(Torrentinfo *info); 
+int read_line(unsigned char *buff, FILE *file);
+int get_torrent_meta_info(Torrentinfo *info); 
+int get_meta_info(Arraylist *torrents, char *map_path);
 
 #endif

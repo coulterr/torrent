@@ -5,7 +5,7 @@
 
 typedef struct {
 	
-	int status; 
+	unsigned char status; 
 	size_t file_index; 
 	size_t offset; 
 	size_t byte_count; 
