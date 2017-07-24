@@ -11,8 +11,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "bin_to_hex.h"
 #include "segmentinfo.h"
+#include "hash_functions.h"
 #include "fileinfo.h"
 #include "arraylist.h"
 #include "torrentinfo.h"

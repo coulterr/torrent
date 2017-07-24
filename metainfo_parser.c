@@ -1,6 +1,5 @@
 #include "headers/metainfo_parser.h"
 
-
 int read_line(char *buff, FILE *file)
 {
 	size_t i = 0; 
@@ -25,12 +24,7 @@ int get_meta_info(Torrentinfo *info)
 	
 
 	FILE *metafile = fopen(meta_path, "r"); 
-	size_t hex_len = SHA_DIGEST_LENGTH * 2; 	
-	int block_len = 16000;
-	int segment_len = 256;  
 	char buff[1024]; 
-
-	
 
 	while(read_line(buff, metafile) > 0)
 	{
@@ -42,8 +36,8 @@ int get_meta_info(Torrentinfo *info)
 		read_line(buff, metafile);
 		long long byte_count = atoll(buff);
 		
-		long long block_count = (byte_count + (block_len - 1)) / block_len; 
-		long long segment_count = (block_count + (segment_len - 1)) / segment_len; 
+		long long block_count = (byte_count + (META_BLOCK_LENGTH - 1)) / META_BLOCK_LENGTH; 
+		long long segment_count = (block_count + (META_SEGMENT_LENGTH - 1)) / META_SEGMENT_LENGTH; 
 		
 		for(long long i = 0; i < segment_count; i++)
 		{
@@ -51,18 +45,18 @@ int get_meta_info(Torrentinfo *info)
 			Segmentinfo_init(&sinfo); 
 			
 			sinfo->file_index = file_index; 
-			sinfo->offset = i * (segment_len * block_len); 
+			sinfo->offset = i * (META_SEGMENT_LENGTH * META_BLOCK_LENGTH); 
 			
 
 			if(i == segment_count - 1){
-				sinfo->byte_count = byte_count - (i * (block_len * segment_len)); 
+				sinfo->byte_count = byte_count - (i * (META_BLOCK_LENGTH * META_SEGMENT_LENGTH)); 
 			}else {
-				sinfo->byte_count = block_len * segment_len; 
+				sinfo->byte_count = META_BLOCK_LENGTH * META_SEGMENT_LENGTH; 
 			}
 			
-			for(long long j = 0; j < (sinfo -> byte_count + (block_len - 1)) / block_len; j++) 
+			for(long long j = 0; j < (sinfo -> byte_count + (META_BLOCK_LENGTH - 1)) / META_BLOCK_LENGTH; j++) 
 			{
-				fread(sinfo->hashes + (j * hex_len), sizeof(char), hex_len, metafile); 		
+				fread(sinfo->hashes + (j * SHA1_HEX_LENGTH), sizeof(char), SHA1_HEX_LENGTH, metafile); 		
 			}
 
 			Arraylist_add((void *)segments, sinfo); 
