@@ -60,6 +60,9 @@ int get_torrent_meta_info(Torrentinfo *info)
 	 
 	unsigned char buff[1024]; 
 
+	read_line(buff, metafile); 
+	strcpy(info->id, buff); 
+
 	while(read_line(buff, metafile) > 0)
 	{
 		Fileinfo *finfo; 

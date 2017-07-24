@@ -8,7 +8,7 @@
 #include "segmentinfo.h"
 
 typedef struct {
-
+	char id[10 + 1]; 
 	char metapath[1024]; 
 	char dirpath[1024];
 	Arraylist *files;

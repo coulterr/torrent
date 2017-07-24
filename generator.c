@@ -76,7 +76,9 @@ int main (int argc, char **argv)
 	const char *meta_path = argv[2]; 
 
 	FILE *metafile = fopen(meta_path, "w"); 
-
+	fwrite("0000000000", sizeof(char), 10, metafile); 
+	fwrite("\n", sizeof(char), 1, metafile); 
+	
 	generate_metadata(src_dir, metafile);
 
 	fclose(metafile); 
