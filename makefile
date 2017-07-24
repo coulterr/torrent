@@ -1,18 +1,18 @@
 default: generator client
 
-generator: generator.o bin_to_hex.o charlist.o
-	gcc -o generator generator.o bin_to_hex.o charlist.o -lssl -lcrypto
-client: client.o metainfo_parser.o bin_to_hex.o segmentinfo.o fileinfo.o arraylist.o torrentinfo.o
-	gcc -o client client.o metainfo_parser.o bin_to_hex.o segmentinfo.o fileinfo.o \
+generator: generator.o hash_functions.o charlist.o
+	gcc -o generator generator.o hash_functions.o charlist.o -lssl -lcrypto
+client: client.o metainfo_parser.o hash_functions.o segmentinfo.o fileinfo.o arraylist.o torrentinfo.o
+	gcc -o client client.o metainfo_parser.o hash_functions.o segmentinfo.o fileinfo.o \
 	arraylist.o torrentinfo.o -lssl -lcrypto -lpthread
 client.o: client.c 
-	gcc -c -o client.o client.c
+	gcc -c -o client.o client.c -std=gnu99
 generator.o: generator.c
 	gcc -c -o generator.o generator.c -std=gnu99
 metainfo_parser.o: metainfo_parser.c headers/metainfo_parser.h 
 	gcc -c -o metainfo_parser.o metainfo_parser.c -std=gnu99
-bin_to_hex.o: bin_to_hex.c headers/bin_to_hex.h
-	gcc -c -o bin_to_hex.o bin_to_hex.c -std=gnu99
+hash_functions.o: hash_functions.c headers/hash_functions.h
+	gcc -c -o hash_functions.o hash_functions.c -std=gnu99
 charlist.o: charlist.c headers/charlist.h
 	gcc -c -o charlist.o charlist.c -std=gnu99
 segmentinfo.o: segmentinfo.c headers/segmentinfo.h

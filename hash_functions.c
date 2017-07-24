@@ -1,4 +1,4 @@
-#include "headers/bin_to_hex.h"
+#include "headers/hash_functions.h"
 
 void bin_to_hex(unsigned char *dest, unsigned char *source, size_t len) 
 {
@@ -18,4 +18,11 @@ void bin_to_hex(unsigned char *dest, unsigned char *source, size_t len)
 		dest[i] = map[dest[i]]; 	
 	}
 
+}
+
+void to_sha1_hex(unsigned char *hex, unsigned char *source, size_t len)
+{
+	unsigned char hash[SHA_DIGEST_LENGTH]; 
+	SHA1(source, len, hash); 
+	bin_to_hex(hex, hash, SHA_DIGEST_LENGTH);
 }

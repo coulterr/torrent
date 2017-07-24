@@ -1,7 +1,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <openssl/sha.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -13,11 +12,9 @@
 
 char *generate_file_metadata(const char *src_path, FILE *metafile, const size_t block_size)
 {	
-	size_t hex_length = SHA_DIGEST_LENGTH * 2; 
 	FILE *source = fopen(src_path, "r"); 
 	unsigned char buff[block_size]; 
-	unsigned char hash[SHA_DIGEST_LENGTH]; 
-	unsigned char hex[hex_length]; 
+	unsigned char hex[SHA1_HEX_LENGTH]; 
 
 	fwrite(src_path, sizeof(char), strlen(src_path), metafile); 
 	fwrite("\n", sizeof(char), 1, metafile); 
@@ -31,24 +28,21 @@ char *generate_file_metadata(const char *src_path, FILE *metafile, const size_t 
 	while(len = fread(buff, sizeof(char), block_size, source)) 
 	{
 		sum += len; 
-		SHA1(buff, len, hash); 
-		bin_to_hex(hex, hash, SHA_DIGEST_LENGTH);
-		Charlist_add(charlist, hex, hex_length); 
+		to_sha1_hex(hex, buff, len); 
+		Charlist_add(charlist, hex, SHA1_HEX_LENGTH); 
 	}
 	
 	fprintf(metafile, "%i\n", sum); 
 	
 	for (size_t i = 0; i < (sum + (block_size - 1)) / block_size; i++)
 	{
-		fwrite((charlist -> data) + hex_length * i, sizeof(char), hex_length, metafile); 
+		fwrite((charlist -> data) + SHA1_HEX_LENGTH * i, sizeof(char), SHA1_HEX_LENGTH, metafile); 
 	}
 	fwrite("\n", sizeof(char), 1, metafile); 
 
-	Charlist_clean(charlist); 
-	free(charlist); 
+	//Charlist_delete(charlist); 
 
 	fclose(source); 
-	fclose(metafile); 
 }
 
 
