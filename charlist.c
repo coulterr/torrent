@@ -19,8 +19,9 @@ int Charlist_add(Charlist *charlist, char *item, size_t len)
 	charlist->size = charlist->size + len; 
 }
 
-void Charlist_clean(Charlist *charlist)
+void Charlist_delete(Charlist *charlist)
 {
 	free(charlist->data); 
+	free(charlist); 
 }
 

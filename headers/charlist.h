@@ -12,6 +12,6 @@ typedef struct {
 
 int Charlist_init(Charlist **charlist);
 int Charlist_add(Charlist *charlist, char *item, size_t len);
-void Charlist_clean(Charlist *charlist);
+void Charlist_delete(Charlist *charlist);
 
 #endif
