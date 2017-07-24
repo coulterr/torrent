@@ -1,10 +1,13 @@
+generator_objs = generator.o hash_functions.o charlist.o
+client_objs = client.o metainfo_parser.o hash_functions.o segmentinfo.o \
+		fileinfo.o torrentinfo.o arraylist.o 
+
 default: generator client
 
-generator: generator.o hash_functions.o charlist.o
-	gcc -o generator generator.o hash_functions.o charlist.o -lssl -lcrypto
-client: client.o metainfo_parser.o hash_functions.o segmentinfo.o fileinfo.o arraylist.o torrentinfo.o
-	gcc -o client client.o metainfo_parser.o hash_functions.o segmentinfo.o fileinfo.o \
-	arraylist.o torrentinfo.o -lssl -lcrypto -lpthread
+generator: $(generator_objs)
+	gcc -o generator $(generator_objs) -lssl -lcrypto
+client: $(client_objs)
+	gcc -o client $(client_objs) -lssl -lcrypto -lpthread
 client.o: client.c 
 	gcc -c -o client.o client.c -std=gnu99
 generator.o: generator.c
