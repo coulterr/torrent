@@ -1,6 +1,6 @@
 generator_objs = generator.o hash_functions.o charlist.o
 client_objs = client.o metainfo_parser.o hash_functions.o segmentinfo.o \
-		fileinfo.o torrentinfo.o arraylist.o 
+		fileinfo.o torrentinfo.o arraylist.o listener.o
 
 default: generator client
 
@@ -26,6 +26,8 @@ torrentinfo.o: torrentinfo.c headers/torrentinfo.h
 	gcc -c -o torrentinfo.o torrentinfo.c -std=gnu99
 arraylist.o: arraylist.c headers/arraylist.h
 	gcc -c -o arraylist.o arraylist.c -std=gnu99
+listener.o: listener.c headers/listener.h
+	gcc -c -o listener.o listener.c -std=gnu99
 
 clean: 
 	rm generator client *.o
