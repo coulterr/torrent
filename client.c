@@ -4,7 +4,8 @@
 #include <pthread.h>
 #include "headers/metainfo_parser.h"
 #include "headers/torrentinfo.h"
-#include "headers/listener.h"
+#include "headers/ipc_server.h"
+#include "headers/ipc_client.h"
 
 int get_torrent_data(char *map_path)
 {
@@ -78,6 +79,13 @@ int main(int argc, char **argv)
 	else if(strcmp(argv[1], "help") == 0)
 	{
 		//print help
+	}
+
+	else if (strcmp(argv[1], "test") == 0) 
+	{
+		char buff[1024]; 
+		send_message(buff, argv[2]); 
+		printf("response: %s\n", buff); 
 	}
 	
 	else
