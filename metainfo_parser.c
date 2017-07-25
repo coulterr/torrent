@@ -67,7 +67,7 @@ int dump_to_map(char *map_path, Arraylist *torrents)
 		for(size_t j = 0; j < segments->size; j++)
 		{
 			Segmentinfo *segment = Arraylist_get(segments, j); 
-			statuses[j] = segment->status; 		
+			statuses[j] = (segment->status) + 48; 		
 		}
 
 		fwrite(statuses, sizeof(char), segments->size, mapfile); 
