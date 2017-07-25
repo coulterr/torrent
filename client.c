@@ -85,7 +85,15 @@ int main(int argc, char **argv)
 	else if (strcmp(argv[1], "test") == 0) 
 	{
 		char buff[1024]; 
-		send_message(buff, argv[2]); 
+		int s;
+		if((s  = get_connection()) == -1){
+			perror("Failed to get connection\n"); 
+			exit(0); 
+		}
+
+		send_message(s, argv[2]); 
+		recv_message(buff, s); 
+		close_connection(s); 
 		printf("response: %s\n", buff); 
 	}
 	

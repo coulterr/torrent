@@ -10,6 +10,9 @@
 #include <sys/un.h>
 #include "arraylist.h"
 
-int send_message(char *buff, char *msg); 
+int get_connection(); 
+int send_message(int s, char *msg); 
+int recv_message(char *buff, int s); 
+int close_connection(int s); 
 
 #endif

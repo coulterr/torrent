@@ -1,8 +1,9 @@
 #include "headers/ipc_client.h"
 
-int send_message(char *buff, char *msg)
+
+int get_connection()
 {
-	int s, t, len; 
+	int s, len; 
 	struct sockaddr_un remote; 
 
 	if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
@@ -17,15 +18,37 @@ int send_message(char *buff, char *msg)
 		return -1; 
 	}
 
+	return s; 
+}
+
+
+int send_message(int s, char *msg)
+{
+	int len; 
+	
 	if (send(s, msg, strlen(msg), 0) == -1){
 		return -1; 
 	}
 
-	if ((t=recv(s, buff, 1023, 0) > 0)) {
+	return 0; 	
+}
+
+
+int recv_message(char *buff, int s)
+{
+	int len; 
+
+	if ((len = recv(s, buff, 1023, 0)) < 0) {
 		return -1; 
 	}else {
-		buff[t] = '\0'; 
+		buff[len] = '\0'; 
 	}
-	
-	return 0; 	
+
+	return 0; 
+}
+
+int close_connection(int s)
+{
+	if (close(s) == -1) return -1; 
+	return 0;
 }
