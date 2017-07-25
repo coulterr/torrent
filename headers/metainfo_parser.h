@@ -21,5 +21,6 @@ void print_info(Torrentinfo *info);
 int read_line(unsigned char *buff, FILE *file);
 int get_torrent_meta_info(Torrentinfo *info); 
 int get_meta_info(Arraylist *torrents, char *map_path);
+int dump_to_map(char *map_path, Arraylist *torrents); 
 
 #endif
