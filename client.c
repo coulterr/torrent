@@ -25,6 +25,7 @@ int get_torrent_data(char *map_path)
 	pthread_create(&thread, NULL, &start_listening, (void *) torrents); 
 	pthread_join(thread, NULL); 
 
+	dump_to_map(map_path, torrents); 
 	Arraylist_delete(torrents, &Torrentinfo_delete); 
 }
 

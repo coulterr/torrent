@@ -49,6 +49,33 @@ int read_line(unsigned char *buff, FILE *file)
 	return i; 
 }
 
+int dump_to_map(char *map_path, Arraylist *torrents)
+{
+	FILE *mapfile = fopen(map_path, "w"); 
+
+	for(size_t i = 0; i < torrents->size; i++)
+	{
+		Torrentinfo *info = (Torrentinfo *) Arraylist_get(torrents, i); 
+		fwrite(info->metapath, sizeof(char), strlen(info->metapath), mapfile); 
+		fwrite("\n", sizeof(char), 1, mapfile); 
+		fwrite(info->dirpath, sizeof(char), strlen(info->dirpath), mapfile); 
+		fwrite("\n", sizeof(char), 1, mapfile); 
+
+		Arraylist *segments = info->segments; 
+		
+		unsigned char statuses[segments->size];
+		for(size_t j = 0; j < segments->size; j++)
+		{
+			Segmentinfo *segment = Arraylist_get(segments, j); 
+			statuses[j] = segment->status; 		
+		}
+
+		fwrite(statuses, sizeof(char), segments->size, mapfile); 
+		fwrite("\n", sizeof(char), 1, mapfile); 
+	}
+}
+
+
 int get_torrent_meta_info(Torrentinfo *info) 
 {
 	unsigned char *meta_path = info->metapath; 
