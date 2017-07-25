@@ -1,5 +1,5 @@
-#ifndef LISTENER_H
-#define LISTENER_H
+#ifndef IPC_SERVER_H
+#define IPC_SERVER_H
 
 #include <stdlib.h>
 #include <stdio.h>
