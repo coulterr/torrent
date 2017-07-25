@@ -2,12 +2,28 @@
 
 int Arraylist_init(Arraylist **list)
 {
-	*list = malloc(sizeof(Arraylist)); 
+	if(!(*list = malloc(sizeof(Arraylist)))){
+		fprintf(stderr, "Failed to allocate Arraylist\n");
+		exit(0); 
+	}
+
 	(*list)->size = 0; 
 	(*list)->capacity = 100; 
-	(*list)->data = malloc(sizeof(void *) * 100); 
-	(*list)->lock = malloc(sizeof(sem_t)); 
-	sem_init((*list)->lock, 0, 1); 
+	
+	if(!((*list)->data = malloc(sizeof(void *) * 100))){
+		fprintf(stderr, "Failed to allocate Arraylist data\n");
+		exit(0); 
+	}
+
+	if(!((*list)->lock = malloc(sizeof(sem_t)))){
+		fprintf(stderr, "Failed to allocate Arraylist lock\n"); 
+		exit(0); 
+	}
+
+	if(sem_init((*list)->lock, 0, 1) == -1){
+		fprintf(stderr, "Failed to initialize Arraylist lock\n"); 
+		exit(0); 
+	}
 }
 
 size_t Arraylist_add(Arraylist *list, void *item)
@@ -15,7 +31,10 @@ size_t Arraylist_add(Arraylist *list, void *item)
 	if (list->size == list->capacity)
 	{
 		list->capacity = list->capacity * 2; 
-		list->data = realloc(list->data, sizeof(void *) * list->capacity); 
+		if(!(list->data = realloc(list->data, sizeof(void *) * list->capacity))){
+			fprintf(stderr, "Failed to reallocate Arraylist data\n"); 
+			exit(0); 
+		}
 	}
 
 	(list->data)[list->size] = item; 

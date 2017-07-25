@@ -56,7 +56,8 @@ int get_torrent_meta_info(Torrentinfo *info)
 	Arraylist *segments = info->segments; 
 	
 
-	FILE *metafile = fopen(meta_path, "r");
+	FILE *metafile;
+	if(!(metafile = fopen(meta_path, "r"))) return -1; 
 	 
 	unsigned char buff[1024]; 
 
@@ -100,11 +101,16 @@ int get_torrent_meta_info(Torrentinfo *info)
 		}
 		fread(buff, sizeof(char), 1, metafile); //read newline character
 	}
+
+	return 0; 
 }
 
 int get_meta_info(Arraylist *torrents, char *map_path)
 {
-	FILE *mapfile = fopen(map_path, "r"); 
+	FILE *mapfile; 
+	if(!(mapfile = fopen(map_path, "r"))){
+		return -1; 
+	}
 	
 	unsigned char buffer[250000]; 
 
@@ -116,7 +122,7 @@ int get_meta_info(Arraylist *torrents, char *map_path)
 		read_line(buffer, mapfile); 
 		strcpy(info->dirpath, buffer); 
 
-		get_torrent_meta_info(info); 
+		if(get_torrent_meta_info(info) == -1) return -1; 
 		
 		Arraylist *segments = info->segments; 
 		read_line(buffer, mapfile); 
@@ -127,18 +133,9 @@ int get_meta_info(Arraylist *torrents, char *map_path)
 			segment->status = buffer[i] - 48; 
 		}
 			
-		
 		Arraylist_add(torrents, info); 
 	}
 
-	fclose(mapfile); 		
+	fclose(mapfile); 
+	return 0; 		
 }
-
-
-
-
-
-
-
-
-

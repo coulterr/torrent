@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <semaphore.h>
+#include <stdio.h>
 
 typedef struct {
 	char path[1024]; 
