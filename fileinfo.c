@@ -3,11 +3,11 @@
 int Fileinfo_init(Fileinfo **finfo)
 {
 	if(!(*finfo = malloc(sizeof(Fileinfo)))){
-		fprintf(stderr, "Failed to allocate for Fileinfo\n"); 
+		perror("Failed to allocate for Fileinfo\n"); 
 		exit(0); 
 	}
 	if(!((*finfo)->lock = malloc(sizeof(sem_t)))){
-		fprintf(stderr, "Failed to allocate for Fileinfo lock\n"); 
+		perror("Failed to allocate for Fileinfo lock\n"); 
 		exit(0); 
 	}
 	sem_init((*finfo)->lock, 0, 1); 
@@ -16,7 +16,7 @@ int Fileinfo_init(Fileinfo **finfo)
 int Fileinfo_delete(void *finfo)
 {
 	if(sem_destroy(((Fileinfo *)finfo)->lock) == -1){
-		fprintf(stderr, "Failed to destroy Fileinfo lock\n"); 
+		perror("Failed to destroy Fileinfo lock\n"); 
 		exit(0); 
 	}
 	free(((Fileinfo *) finfo)->lock); 

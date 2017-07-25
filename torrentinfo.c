@@ -4,7 +4,7 @@
 int Torrentinfo_init(Torrentinfo **info)
 {
 	if(!(*info = malloc(sizeof(Torrentinfo)))){
-		fprintf(stderr, "Failed to allocate for Torrentinfo\n"); 
+		perror("Failed to allocate for Torrentinfo\n"); 
 		exit(0); 
 	}
 	Arraylist_init(&((*info)->files)); 

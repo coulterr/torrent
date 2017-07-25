@@ -12,7 +12,7 @@ int get_torrent_data(char *map_path)
 	Arraylist_init(&torrents); 
 
 	if (get_meta_info(torrents, map_path) == -1) {
-		fprintf(stderr, "Failed to parse metainfo\n"); 
+		perror("Failed to parse metainfo\n"); 
 		exit(0); 
 	}
 	
@@ -50,19 +50,19 @@ int start_daemon(char *map_path)
 int main(int argc, char **argv)
 {
 	if (argc < 2) {
-		fprintf(stderr, "Not enough arguments\n"); 
+		perror("Not enough arguments\n"); 
 		exit(0); 
 	}
 
 	if (strcmp(argv[1], "start") == 0) 
 	{
 		if(argc < 3) {
-			fprintf(stderr, "Expected: start $mapfile_path\n"); 
+			perror("Expected: start $mapfile_path\n"); 
 			exit(0); 
 		}
 
 		if (start_daemon(argv[2]) == -1) {
-			fprintf(stderr, "Failed to fork process.\n"); 
+			perror("Failed to fork process.\n"); 
 			exit(0); 
 		}
 	}
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 	else if (strcmp(argv[1], "add") == 0)
 	{
 		if(argc < 4) {
-			fprintf(stderr, "Expected: add $metafile_path $rootdir\n"); 
+			perror("Expected: add $metafile_path $rootdir\n"); 
 			exit(0); 
 		}
 	}	
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 	
 	else
 	{
-		fprintf(stderr, "Invalid command"); 
+		perror("Invalid command"); 
 	}
 
 }

@@ -4,7 +4,7 @@
 int Segmentinfo_init(Segmentinfo **sinfo)
 {
 	if(!(*sinfo = malloc(sizeof(Segmentinfo)))){
-		fprintf(stderr, "Failed to allocate Segmentinfo\n"); 
+		perror("Failed to allocate Segmentinfo\n"); 
 		exit(0); 
 	}
 	(*sinfo)->status = 0; 

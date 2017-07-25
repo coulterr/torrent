@@ -3,7 +3,7 @@
 int Arraylist_init(Arraylist **list)
 {
 	if(!(*list = malloc(sizeof(Arraylist)))){
-		fprintf(stderr, "Failed to allocate Arraylist\n");
+		perror("Failed to allocate Arraylist\n");
 		exit(0); 
 	}
 
@@ -11,17 +11,17 @@ int Arraylist_init(Arraylist **list)
 	(*list)->capacity = 100; 
 	
 	if(!((*list)->data = malloc(sizeof(void *) * 100))){
-		fprintf(stderr, "Failed to allocate Arraylist data\n");
+		perror("Failed to allocate Arraylist data\n");
 		exit(0); 
 	}
 
 	if(!((*list)->lock = malloc(sizeof(sem_t)))){
-		fprintf(stderr, "Failed to allocate Arraylist lock\n"); 
+		perror("Failed to allocate Arraylist lock\n"); 
 		exit(0); 
 	}
 
 	if(sem_init((*list)->lock, 0, 1) == -1){
-		fprintf(stderr, "Failed to initialize Arraylist lock\n"); 
+		perror("Failed to initialize Arraylist lock\n"); 
 		exit(0); 
 	}
 }
