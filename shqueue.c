@@ -104,7 +104,9 @@ int Shqueue_delete(Shqueue *shqueue, int (*funcptr)(void *))
 	struct Shqueue_node *node = shqueue->head; 
 	while (node) 
 	{
-		funcptr(node->data); 
+		if(funcptr == NULL) free(node->data); 
+		else funcptr(node->data); 
+
 		struct Shqueue_node *temp = node->next; 
 		free(node); 
 		node = temp; 
