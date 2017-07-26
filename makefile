@@ -1,6 +1,6 @@
 generator_objs = generator.o hash_functions.o charlist.o
 client_objs = client.o metainfo_parser.o hash_functions.o segmentinfo.o \
-		fileinfo.o torrentinfo.o arraylist.o shqueue.o \
+		fileinfo.o torrentinfo.o leechpair.o arraylist.o shqueue.o \
 		ipc_server.o ipc_client.o \
 
 default: generator client
@@ -25,6 +25,8 @@ fileinfo.o: fileinfo.c headers/fileinfo.h
 	gcc -c -o fileinfo.o fileinfo.c -std=gnu99
 torrentinfo.o: torrentinfo.c headers/torrentinfo.h
 	gcc -c -o torrentinfo.o torrentinfo.c -std=gnu99
+leechpair.o: leechpair.c headers/leechpair.h
+	gcc -c -o leechpair.o leechpair.c -std=gnu99
 arraylist.o: arraylist.c headers/arraylist.h
 	gcc -c -o arraylist.o arraylist.c -std=gnu99
 shqueue.o: shqueue.c headers/shqueue.h
