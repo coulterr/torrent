@@ -54,6 +54,11 @@ int Arraylist_delete(Arraylist *list, int (*funcptr)(void *))
 		(*funcptr) ((list->data)[i]); 
 	}
 	
+	if(sem_destroy(list->lock) == -1){
+		perror("Failed to destroy Fileinfo lock\n"); 
+		exit(0); 
+	}
+
 	free(list->lock); 
 	free(list->data); 
 	free(list); 
