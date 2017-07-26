@@ -7,7 +7,7 @@
 #include "headers/ipc_server.h"
 #include "headers/ipc_client.h"
 
-int get_torrent_data(char *map_path)
+int initialize_client(char *map_path)
 {
 	Arraylist *torrents; 
 	Arraylist_init(&torrents); 
@@ -16,14 +16,27 @@ int get_torrent_data(char *map_path)
 		perror("Failed to parse metainfo\n"); 
 		exit(0); 
 	}
-	
+
 	for(size_t i = 0; i < torrents->size; i++){
 		print_info(Arraylist_get(torrents, i)); 
 	}
+	
+	//create lock-protected stopping mechanism and shqueue (and populate it) 
 
-	pthread_t thread; 
-	pthread_create(&thread, NULL, &start_listening, (void *) torrents); 
-	pthread_join(thread, NULL); 
+	//pthread_t seed_thread; 
+	//pthread_create(&seed_thread, NULL, function, (void *) torrents); and stopping mechanism
+	//seed doesn't need shqueue, because it receives requests for specific torrents 
+
+	//pthread_t leech_thread;
+	//pthread_create(&leech_thread, NULL, function, (void *) torrents, shqueue, and stopping mechanism
+
+	pthread_t ipc_thread; 
+	pthread_create(&ipc_thread, NULL, &start_listening, (void *) torrents); //and shqueue
+		
+	pthread_join(ipc_thread, NULL);
+	//then kill the other threads with stopping mechanism
+	//pthread_join(seed_thread); 
+	//pthread_join(leech_thread); 
 
 	dump_to_map(map_path, torrents); 
 	Arraylist_delete(torrents, &Torrentinfo_delete); 
@@ -36,7 +49,8 @@ int start_daemon(char *map_path)
 
 	switch (fork()) {
 		case 0:
-			get_torrent_data(map_path); 
+			initialize_client(map_path); 
+			fprintf(stderr, "hello"); 
 			return 0; 
 
 		case -1:
