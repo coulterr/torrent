@@ -71,6 +71,33 @@ void *Shqueue_pop(Shqueue *shqueue)
 	return data; 
 }
 
+void *Shqueue_try_pop(Shqueue *shqueue) 
+{
+	void *data = NULL; 
+	
+	struct timespec t; 
+	t.tv_sec = 30; 
+	t.tv_nsec = 0; 
+
+	if (sem_timedwait(shqueue->lock, &t)) {
+
+		if (shqueue->size > 0) {
+
+			struct Shqueue_node *node = shqueue->head; 
+			shqueue->head = node->next; 
+
+			void *data = node->data; 
+			free(node); 
+
+			shqueue->size = shqueue->size - 1; 
+		}
+	
+		sem_post(shqueue->lock); 
+	}
+
+	return data; 
+}
+
 
 int Shqueue_delete(Shqueue *shqueue, int (*funcptr)(void *)) 
 {

@@ -25,6 +25,7 @@ struct Shqueue_node {
 int Shqueue_init(Shqueue **shqueue);
 int Shqueue_push(Shqueue *shqueue, void *data);
 void *Shqueue_pop(Shqueue *shqueue);
+void *Shqueue_try_pop(Shqueue *shqueue);
 int Shqueue_delete(Shqueue *shqueue, int (*funcptr)(void *));
 
 #endif
