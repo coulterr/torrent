@@ -6,6 +6,10 @@
 #include "headers/torrentinfo.h"
 #include "headers/ipc_server.h"
 #include "headers/ipc_client.h"
+#include "headers/shqueue.h"
+#include "headers/leechpair.h"
+#include "headers/seedthread.h"
+#include "headers/leechthread.h"
 
 int initialize_client(char *map_path)
 {
@@ -21,8 +25,25 @@ int initialize_client(char *map_path)
 		print_info(Arraylist_get(torrents, i)); 
 	}
 	
-	//create lock-protected stopping mechanism and shqueue (and populate it) 
+	sem_t seed_killswitch; 
+	sem_init(&seed_killswitch, 0, 0); 
+	
+	sem_t leech_killswitch; 
+	sem_init(&leech_killswitch, 0, 0);
 
+	Shqueue *leechqueue; 
+	Shqueue_init(&leechqueue); 
+	
+	for (size_t i = 0; i < torrents->size; i++) {
+		Torrentinfo *torrent = Arraylist_get(torrents, i); 
+		Arraylist *segments = torrent->segments; 
+		for (size_t j = 0; j < segments->size; j++) {
+			Segmentinfo *segment = Arraylist_get(segments, i); 
+			Leechpair *pair; 
+			Leechpair_init(&pair, segment, torrent); 
+			Shqueue_push(leechqueue, (void *) pair); 
+		}
+	}
 	//pthread_t seed_thread; 
 	//pthread_create(&seed_thread, NULL, function, (void *) torrents); and stopping mechanism
 	//seed doesn't need shqueue, because it receives requests for specific torrents 
@@ -38,7 +59,9 @@ int initialize_client(char *map_path)
 	//pthread_join(seed_thread); 
 	//pthread_join(leech_thread); 
 
+	
 	dump_to_map(map_path, torrents); 
+	Shqueue_delete(leechqueue, &Leechpair_delete); 
 	Arraylist_delete(torrents, &Torrentinfo_delete); 
 }
 
