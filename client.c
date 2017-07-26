@@ -73,7 +73,6 @@ int start_daemon(char *map_path)
 	switch (fork()) {
 		case 0:
 			initialize_client(map_path); 
-			fprintf(stderr, "hello"); 
 			return 0; 
 
 		case -1:
