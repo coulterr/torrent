@@ -2,14 +2,16 @@
 #define SEEDTHREAD_H
 
 #include <semaphore.h>
+#include <pthread.h>
 #include "arraylist.h"
 
-struct seedthread_args {
+typedef struct {
 	Arraylist *torrents; 
-	sem_t *parent_killswitch; 
-};
+	sem_t parent_killswitch; 
+	pthread_t thread; 
+}Seedthread;
 
-void start_seedthread(void *args);
-
+int Seedthread_init(Seedthread **seedthread, Arraylist *torrents); 
+void *Seedthread_start(void *args); 
 
 #endif
