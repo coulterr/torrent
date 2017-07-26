@@ -1,7 +1,7 @@
 generator_objs = generator.o hash_functions.o charlist.o
 client_objs = client.o metainfo_parser.o hash_functions.o segmentinfo.o \
 		fileinfo.o torrentinfo.o leechpair.o arraylist.o shqueue.o \
-		ipc_server.o ipc_client.o \
+		ipc_server.o ipc_client.o seedthread.o leechthread.o \
 
 default: generator client
 
@@ -35,6 +35,10 @@ ipc_server.o: ipc_server.c headers/ipc_server.h
 	gcc -c -o ipc_server.o ipc_server.c -std=gnu99
 ipc_client.o: ipc_client.c headers/ipc_client.h
 	gcc -c -o ipc_client.o ipc_client.c -std=gnu99
+seedthread.o: seedthread.c headers/seedthread.h
+	gcc -c -o seedthread.o seedthread.c -std=gnu99
+leechthread.o: leechthread.c headers/leechthread.h
+	gcc -c -o leechthread.o leechthread.c -std=gnu99
 
 clean: 
 	rm generator client *.o
