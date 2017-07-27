@@ -2,10 +2,19 @@
 
 int Seedthread_init(Seedthread **seedthread, Arraylist *torrents)
 {
-	*seedthread = malloc(sizeof(Seedthread)); 
+	if (!(*seedthread = malloc(sizeof(Seedthread)))) {
+		perror("Failed to allocate Seedthread\n"); 
+		exit(0); 
+	}
+
 	(*seedthread)->torrents = torrents; 
-	sem_init(&((*seedthread)->parent_killswitch), 0, 1); 
-	pthread_create(&((*seedthread)->thread), NULL, &Seedthread_start, (void *) seedthread);  	
+	
+	if (sem_init(&((*seedthread)->parent_killswitch), 0, 0) == -1) {
+		perror("Failed to initialize Seedthread parent_killswitch\n"); 
+		exit(0); 
+	}
+
+	pthread_create(&((*seedthread)->thread), NULL, &Seedthread_start, (void *) *seedthread);  	
 
 }
 
@@ -23,8 +32,9 @@ void *Seedthread_start(void *args)
 	printf("Seedthread started...\n"); 
 	
 	while(1) {
-		if (sem_trywait(&(self->parent_killswitch))) {
+		if (sem_trywait(&(self->parent_killswitch)) == 0) {
 			printf("Seedthread dying...\n"); 
+			break; 
 		}
 	}
 }

@@ -50,5 +50,14 @@ int Leechthread_delete(Leechthread *leechthread)
 
 void *Leechthread_start(void *args)
 {
+	Leechthread *self = (Leechthread *) args; 
 
+	printf("Leechthread started...\n"); 
+
+	while(1) {
+		if (sem_trywait(&(self->parent_killswitch)) == 0) {
+			printf("Leechthread dying...\n"); 
+			break; 
+		}
+	}
 }

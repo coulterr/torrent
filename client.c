@@ -22,23 +22,25 @@ int initialize_client(char *map_path)
 	for(size_t i = 0; i < torrents->size; i++){
 		print_info(Arraylist_get(torrents, i)); 
 	}
-	
-	//pthread_t seed_thread; 
-	//pthread_create(&seed_thread, NULL, function, (void *) torrents); and stopping mechanism
-	//seed doesn't need shqueue, because it receives requests for specific torrents 
 
-	//pthread_t leech_thread;
-	//pthread_create(&leech_thread, NULL, function, (void *) torrents, shqueue, and stopping mechanism
+	Seedthread *seedthread; 
+	Seedthread_init(&seedthread, torrents); 
+
+	Leechthread *leechthread; 
+	Leechthread_init(&leechthread, torrents); 
 
 	pthread_t ipc_thread; 
 	pthread_create(&ipc_thread, NULL, &start_listening, (void *) torrents); //and shqueue
-		
 	pthread_join(ipc_thread, NULL);
-	//then kill the other threads with stopping mechanism
-	//pthread_join(seed_thread); 
-	//pthread_join(leech_thread); 
 
-	
+	printf("Killing seedthread...\n"); 
+	Seedthread_kill(seedthread); 
+	printf("Killing leechthread...\n"); 
+	Leechthread_kill(leechthread); 
+
+	Seedthread_delete(seedthread); 
+	Leechthread_delete(leechthread); 
+
 	dump_to_map(map_path, torrents); 
 	Arraylist_delete(torrents, &Torrentinfo_delete); 
 }
