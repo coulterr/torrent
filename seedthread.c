@@ -9,7 +9,28 @@ int Seedthread_init(Seedthread **seedthread, Arraylist *torrents)
 
 }
 
+
+int Seedthread_kill(Seedthread *seedthread)
+{
+	sem_post(&(seedthread->parent_killswitch)); 
+}
+
+
 void *Seedthread_start(void *args)
 {
+	Seedthread *self = (Seedthread *) args; 
 
+	printf("Seedthread started...\n"); 
+	
+	while(1) {
+		if (sem_trywait(&(self->parent_killswitch))) {
+			printf("Seedthread dying...\n"); 
+		}
+	}
+}
+
+int Seedthread_delete(void *seedthread)
+{
+	sem_destroy(&((((Seedthread *) seedthread))->parent_killswitch)); 
+	free(seedthread); 
 }

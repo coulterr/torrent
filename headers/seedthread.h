@@ -12,6 +12,8 @@ typedef struct {
 }Seedthread;
 
 int Seedthread_init(Seedthread **seedthread, Arraylist *torrents); 
+int Seedthread_kill(Seedthread *seedthread); 
 void *Seedthread_start(void *args); 
+int Seedthread_delete(void *seedthread); 
 
 #endif
