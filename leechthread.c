@@ -1,14 +1,27 @@
 #include "headers/leechthread.h"
 
 
-int Leechthread_init(Leechthread **leechthread)
+int Leechthread_init(Leechthread **leechthread, Arraylist *torrents)
 {
 	*leechthread = malloc(sizeof(leechthread)); 
 	(*leechthread)->leechqueue = malloc(sizeof(Shqueue)); 
 	Shqueue_init(&((*leechthread)->leechqueue)); 
 
 	sem_init(&((*leechthread)->parent_killswitch), 0, 0);
-	
+
+	for (size_t i = 0; i < torrents->size; i++) {
+
+		Torrentinfo *torrent = Arraylist_get(torrents, i); 
+		Arraylist *segments = torrent->segments; 
+		
+		for (size_t j = 0; j < segments->size; j++) {
+
+			Segmentinfo *segment = Arraylist_get(segments, j); 
+			Leechthread_enqueue(*leechthread, segment, torrent); 
+		}
+	}
+
+
 	pthread_create(&((*leechthread)->thread), NULL, &Leechthread_start, (void *) *leechthread); 
 }
 

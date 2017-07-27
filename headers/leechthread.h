@@ -18,7 +18,7 @@ struct leechpair {
 	Torrentinfo *torrent; 
 };
 
-int Leechthread_init(Leechthread **leechthread); 
+int Leechthread_init(Leechthread **leechthread, Arraylist *torrents); 
 int Leechthread_enqueue(Leechthread *leechthread, Segmentinfo *segment, Torrentinfo *torrent);
 int Leechthread_kill(Leechthread *leechthread);
 int Leechthread_delete(Leechthread *leechthread);
