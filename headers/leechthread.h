@@ -3,8 +3,10 @@
 
 #include <semaphore.h>
 #include <pthread.h>
-#include "segmentinfo.h"
+#include "arraylist.h"
 #include "torrentinfo.h"
+#include "segmentinfo.h"
+#include "fileinfo.h"
 #include "shqueue.h"
 
 typedef struct {
@@ -15,11 +17,11 @@ typedef struct {
 
 struct leechpair {
 	Segmentinfo *segment; 
-	Torrentinfo *torrent; 
+	Fileinfo *file;
 };
 
 int Leechthread_init(Leechthread **leechthread, Arraylist *torrents); 
-int Leechthread_enqueue(Leechthread *leechthread, Segmentinfo *segment, Torrentinfo *torrent);
+int Leechthread_enqueue(Leechthread *leechthread, Segmentinfo *segment, Fileinfo *file);
 int Leechthread_kill(Leechthread *leechthread);
 int Leechthread_delete(Leechthread *leechthread);
 void *Leechthread_start(void *args);

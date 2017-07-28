@@ -86,7 +86,7 @@ void *Shqueue_try_pop(Shqueue *shqueue)
 			struct Shqueue_node *node = shqueue->head; 
 			shqueue->head = node->next; 
 
-			void *data = node->data; 
+			data = node->data; 
 			free(node); 
 
 			shqueue->size = shqueue->size - 1; 
