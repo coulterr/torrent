@@ -24,6 +24,16 @@ int Arraylist_init(Arraylist **list)
 		perror("Failed to initialize Arraylist lock\n"); 
 		exit(0); 
 	}
+	
+	if(!((*list)->full = malloc(sizeof(sem_t)))){
+		perror("Failed to allocate Arraylist full\n"); 
+		exit(0); 
+	}
+
+	if(sem_init((*list)->full, 0, 1) == -1){
+		perror("Failed to initialize Arraylist full\n"); 
+		exit(0); 
+	}
 }
 
 size_t Arraylist_add(Arraylist *list, void *item)
@@ -42,7 +52,8 @@ size_t Arraylist_add(Arraylist *list, void *item)
 		(list->data)[list->size] = item; 
 		list->size = list->size + 1;
 		size_t result = (list->size) - 1;  
-	
+
+	sem_post(list->full); 	
 	sem_post(list->lock); 
 
 	return result; 

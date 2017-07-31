@@ -11,6 +11,7 @@ typedef struct {
 	size_t size; 
 	size_t capacity; 
 	sem_t *lock; 
+	sem_t *full; 
 
 }Arraylist; 
 
