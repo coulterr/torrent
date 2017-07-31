@@ -28,24 +28,37 @@ int Arraylist_init(Arraylist **list)
 
 size_t Arraylist_add(Arraylist *list, void *item)
 {
-	if (list->size == list->capacity)
-	{
-		list->capacity = list->capacity * 2; 
-		if(!(list->data = realloc(list->data, sizeof(void *) * list->capacity))){
-			fprintf(stderr, "Failed to reallocate Arraylist data\n"); 
-			exit(0); 
-		}
-	}
+	sem_wait(list->lock); 
 
-	(list->data)[list->size] = item; 
-	list->size = list->size + 1; 
-	return (list->size) - 1;  
+		if (list->size == list->capacity)
+		{
+			list->capacity = list->capacity * 2; 
+			if(!(list->data = realloc(list->data, sizeof(void *) * list->capacity))){
+				fprintf(stderr, "Failed to reallocate Arraylist data\n"); 
+				exit(0); 
+			}
+		}
+
+		(list->data)[list->size] = item; 
+		list->size = list->size + 1;
+		size_t result = (list->size) - 1;  
+	
+	sem_post(list->lock); 
+
+	return result; 
 }
 
 void *Arraylist_get(Arraylist *list, size_t index)
 {
-	if (index >= 0 && index < list->size) return (list->data)[index]; 
-	return NULL; 	
+	void *result = NULL;
+	
+	sem_wait(list->lock); 
+
+		if (index >= 0 && index < list->size) result = (list->data)[index]; 
+
+	sem_post(list->lock); 	
+
+	return result; 
 }
 
 int Arraylist_delete(Arraylist *list, int (*funcptr)(void *))
