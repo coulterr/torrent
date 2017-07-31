@@ -30,7 +30,7 @@ int Arraylist_init(Arraylist **list)
 		exit(0); 
 	}
 
-	if(sem_init((*list)->full, 0, 1) == -1){
+	if(sem_init((*list)->full, 0, 0) == -1){
 		perror("Failed to initialize Arraylist full\n"); 
 		exit(0); 
 	}
@@ -82,8 +82,14 @@ int Arraylist_delete(Arraylist *list, int (*funcptr)(void *))
 		perror("Failed to destroy Arraylist lock\n"); 
 		exit(0); 
 	}
+	
+	if(sem_destroy(list->full) == -1){
+		perror("Failed to destroy Arraylist lock\n"); 
+		exit(0); 
+	}
 
 	free(list->lock); 
+	free(list->full); 
 	free(list->data); 
 	free(list); 
 }

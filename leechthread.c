@@ -4,36 +4,10 @@
 int Leechthread_init(Leechthread **leechthread, Arraylist *torrents)
 {
 	*leechthread = malloc(sizeof(leechthread)); 
-	(*leechthread)->leechqueue = malloc(sizeof(Shqueue)); 
-	Shqueue_init(&((*leechthread)->leechqueue)); 
-
 	sem_init(&((*leechthread)->parent_killswitch), 0, 0);
-
-	for (size_t i = 0; i < torrents->size; i++) {
-
-		Torrentinfo *torrent = Arraylist_get(torrents, i);
-		Arraylist *files = torrent->files;  
-		Arraylist *segments = torrent->segments; 
-		
-		for (size_t j = 0; j < segments->size; j++) {
-
-			Segmentinfo *segment = Arraylist_get(segments, j); 
-			Fileinfo *file = Arraylist_get(files, segment->file_index); 
-			Leechthread_enqueue(*leechthread, segment, file); 
-		}
-	}
-
+	(*leechthread)->torrents = torrents; 
 
 	pthread_create(&((*leechthread)->thread), NULL, &Leechthread_start, (void *) *leechthread); 
-}
-
-int Leechthread_enqueue(Leechthread *leechthread, Segmentinfo *segment, Fileinfo *file)
-{
-	struct leechpair *pair = malloc(sizeof(struct leechpair)); 
-	pair->segment = segment; 
-	pair->file = file; 
-	
-	Shqueue_push(leechthread->leechqueue, (void *) pair); 	
 }
 
 
@@ -44,7 +18,6 @@ int Leechthread_kill(Leechthread *leechthread)
 
 int Leechthread_delete(Leechthread *leechthread)
 {
-	Shqueue_delete(leechthread->leechqueue, NULL); 
 	sem_destroy(&(leechthread->parent_killswitch)); 
 
 	free(leechthread); 
@@ -55,25 +28,40 @@ void *Leechthread_start(void *args)
 	Leechthread *self = (Leechthread *) args; 
 
 	printf("Leechthread started...\n"); 
+	
+	struct timespec t; 
+	t.tv_sec = 30; 
+	t.tv_nsec = 30000000000; 
+
+	size_t index = 0; 
+
 
 	while(1) {
 	
-		struct leechpair *pair =  (struct leechpair *) Shqueue_try_pop(self->leechqueue); 
-		
-		if (!pair) {
-			if (sem_trywait(&(self->parent_killswitch)) == 0) {
-				printf("Leechthread dying...\n"); 
-				break; 
-			}
-			continue; 
+		if (sem_timedwait(self->torrents->full, &t) == 0) {
+
+			Torrentinfo *torrent = (Torrentinfo *) Arraylist_get(self->torrents, index); 
+			
+			for (size_t j = 0; j < torrent->segments->size; j++) {	
+				
+				Segmentinfo *segment = (Segmentinfo *) Arraylist_get(torrent->segments, j); 
+				Fileinfo *file = (Fileinfo *) Arraylist_get(torrent->files, segment->file_index); 
+				
+				printf("PATH: %s\n", file->path); 
+				printf("OFFSET: %s\n", segment->offset);
+				
+			} 
+			
+			
+			//Do stuff with torrent	
+			
+			index++; 
 		}
 		
-		Fileinfo *file = pair->file; 
-		Segmentinfo *segment = pair->segment; 	
-		
-		printf("PATH: %s\n", file->path); 
-		printf("OFFSET: %s\n", segment->offset); 
-
-
+		if (sem_trywait(&(self->parent_killswitch)) == 0) {
+			printf("Leechthread dying...\n"); 
+			break; 
+		}
+		continue; 
 	}
 }
