@@ -30,9 +30,9 @@ void *Leechthread_start(void *args)
 	printf("Leechthread started...\n"); 
 	
 	struct timespec t; 
-	t.tv_sec = 30; 
-	t.tv_nsec = 30000000000; 
-
+	t.tv_nsec += 30000000000;
+	t.tv_sec = t.tv_nsec / 1000000000;
+	t.tv_nsec %= 1000000000;
 	size_t index = 0; 
 
 
@@ -48,8 +48,7 @@ void *Leechthread_start(void *args)
 				Fileinfo *file = (Fileinfo *) Arraylist_get(torrent->files, segment->file_index); 
 				
 				printf("PATH: %s\n", file->path); 
-				printf("OFFSET: %s\n", segment->offset);
-				
+				printf("OFFSET: %i\n", segment->offset);
 			} 
 			
 			
