@@ -13,6 +13,8 @@ Leech_control_thread
 
 Leech_connection_thread
 	- Process a single exchange
+	- Cannot be terminated early (must self terminate). Okay since it will self-terminate
+	  on waits exceeding some time slice
 
 
 Seed_base_thread
@@ -21,5 +23,7 @@ Seed_base_thread
 
 Seed_connection_thread
 	- Processes a single exchange
+	- Cannot be terminated early (must self terminate). Okay since it will self-terminate
+	  on waits exceeding some time slice
 
 
