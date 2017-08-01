@@ -38,6 +38,10 @@ int initialize_client(char *map_path)
 	printf("Killing leechthread...\n"); 
 	Leechthread_kill(leechthread); 
 
+	pthread_join(seedthread->thread, NULL); 
+	pthread_join(leechthread->thread, NULL); 
+
+
 	Seedthread_delete(seedthread); 
 	Leechthread_delete(leechthread); 
 
