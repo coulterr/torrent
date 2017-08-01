@@ -1,0 +1,25 @@
+Leech_base_thread
+	- Creates and has Global Leech Limit
+	- Creates and has leech_threads
+Leech_control_thread
+	- Gets data from tracker
+	- Creates and has leech_connection_threads
+
+	1. Get list of hosts 
+	2. For each host, start a thread, passing it pointer to hosts
+	3. Wait for threads to return 
+	4. When threads retun, re-evaluate and prune hosts. If below some threshold, get a new list of hosts. 
+	
+
+Leech_connection_thread
+	- Process a single exchange
+
+
+Seed_base_thread
+	- Creates and has Global Seed Limit
+	- Creates and has seed_threads (creates each on connection request) 
+
+Seed_connection_thread
+	- Processes a single exchange
+
+
