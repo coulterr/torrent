@@ -8,6 +8,7 @@
 #include "segmentinfo.h"
 #include "fileinfo.h"
 #include "shqueue.h"
+#include "leech_control_thread.h"
 
 typedef struct {
 	Arraylist *torrents; 

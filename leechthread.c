@@ -3,7 +3,7 @@
 
 int Leechthread_init(Leechthread **leechthread, Arraylist *torrents)
 {
-	*leechthread = malloc(sizeof(leechthread)); 
+	*leechthread = malloc(sizeof(Leechthread)); 
 	sem_init(&((*leechthread)->parent_killswitch), 0, 0);
 	(*leechthread)->torrents = torrents; 
 
@@ -35,32 +35,44 @@ void *Leechthread_start(void *args)
 	t.tv_nsec %= 1000000000;
 	size_t index = 0; 
 
+	Arraylist *leeches;
+	Arraylist_init(&leeches); 
 
-	while(1) {
+
+	while (1) {
 	
 		if (sem_timedwait(self->torrents->full, &t) == 0) {
 
 			Torrentinfo *torrent = (Torrentinfo *) Arraylist_get(self->torrents, index); 
-			
-			for (size_t j = 0; j < torrent->segments->size; j++) {	
-				
-				Segmentinfo *segment = (Segmentinfo *) Arraylist_get(torrent->segments, j); 
-				Fileinfo *file = (Fileinfo *) Arraylist_get(torrent->files, segment->file_index); 
-				
-				printf("PATH: %s\n", file->path); 
-				printf("OFFSET: %i\n", segment->offset);
-			} 
-			
-			
-			//Do stuff with torrent	
+		
+			Leech_control_thread *leech; 
+			Leech_control_thread_init(&leech, torrent);
+
+			Arraylist_add(leeches, leech); 
 			
 			index++; 
 		}
 		
 		if (sem_trywait(&(self->parent_killswitch)) == 0) {
+			
 			printf("Leechthread dying...\n"); 
+		
+			for (size_t i = 0; i < leeches->size; i++) {
+				Leech_control_thread *leech = Arraylist_get(leeches, i); 
+				sem_post(&(leech->killswitch)); 
+			}
+	
+			for (size_t i = 0; i < leeches->size; i++) {
+				Leech_control_thread *leech = Arraylist_get(leeches, i); 
+				pthread_join(leech->thread, NULL); 
+			}
+			
 			break; 
+		
 		}
+		
 		continue; 
 	}
+
+	Arraylist_delete(leeches, &Leech_control_thread_delete); 
 }
